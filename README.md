@@ -109,7 +109,7 @@ Note that this reference has register addresses specific to the BCM2836/BCM2837 
 * Raspberry PI 1 & Zero (BCM2835) : 0x20000000
 * Raspberry PI 4 (BCM2711) : 0xFE000000
 
-Additionally, an Excel spreadsheet ["dma_pwm_pulse_width_calculator"](doc/dma_pwm_pulse_width_calculator) is provided to allow easy calculation of custom pulse widths (more discussion below on this).
+Additionally, an Excel spreadsheet ["dma_pwm_pulse_width_calculator.xlsx"](doc/dma_pwm_pulse_width_calculator.xlsx) is provided to allow easy calculation of custom pulse widths (more discussion below on this).
 
 ### Functions
 
@@ -124,7 +124,7 @@ float config_pwm(int pages, float pulse_width);
 
 The amount of pages allocated `int pages` describes the amount of uncached memory allocated by each PWM channel. Note that a "ping-pong" buffer is used to minimize signal interruption when `set_pwm()` updates an already enabled signal so multiply `int pages` by 2 to get the total amount of allocated memory. This defaults to `DEFAULT_PAGES` or 16 pages (65,536 bytes for 4096-byte page systems).
 
-Pulse width in microseconds of the PWM signal `float pulse_width` is the length of time in which a GPIO pin remains set or cleared. Determining an appropriate pulse width is a function of the allocated memory pages, desired frequency range, and desired duty cycle resolution. See [raspberry_pi_dma_pwm.pdf](doc/raspberry_pi_dma_pwm.pdf) and ["dma_pwm_pulse_width_calculator"](doc/dma_pwm_pulse_width_calculator) for a discussion on how to calculate this for yourself, but several presets are available targeting an appropriate pulse width for servos `SERVO_PULSE_WIDTH`, D.C motors `MOTOR_PULSE_WIDTH`, and LEDs `LED_PULSE_WIDTH`. This defaults to `DEFAULT_PULSE_WIDTH` or 5 us. Use the following recommendations for frequency ranges for the above presets to achieve a duty cycle within 10% of desired at the default allocated memory:
+Pulse width in microseconds of the PWM signal `float pulse_width` is the length of time in which a GPIO pin remains set or cleared. Determining an appropriate pulse width is a function of the allocated memory pages, desired frequency range, and desired duty cycle resolution. See [raspberry_pi_dma_pwm.pdf](doc/raspberry_pi_dma_pwm.pdf) and ["dma_pwm_pulse_width_calculator.xlsx"](doc/dma_pwm_pulse_width_calculator.xlsx) for a discussion on how to calculate this for yourself, but several presets are available targeting an appropriate pulse width for servos `SERVO_PULSE_WIDTH`, D.C motors `MOTOR_PULSE_WIDTH`, and LEDs `LED_PULSE_WIDTH`. This defaults to `DEFAULT_PULSE_WIDTH` or 5 us. Use the following recommendations for frequency ranges for the above presets to achieve a duty cycle within 10% of desired at the default allocated memory:
 1. `DEFAULT_PULSE_WIDTH` : 100 Hz - 20 kHz
 2. `SERVO_PULSE_WIDTH` : 50 Hz - 10 kHz
 3. `MOTOR_PULSE_WIDTH` : 5 kHz - 1 Mhz
