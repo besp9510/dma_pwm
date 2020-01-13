@@ -44,7 +44,6 @@ source: $(TARGET)
 directories:
 	@mkdir -p $(TARGETDIR)
 	@mkdir -p $(BUILDDIR)
-	@cp $(ROOT)/../src/* $(SRCDIR)/
 
 # Clean target and object files:
 clean:
@@ -55,6 +54,7 @@ clean:
 
 # Link:
 $(TARGET): $(OBJECTS)
+	@mkdir -p $(TARGETDIR)
 	$(CC) -o $(TARGETDIR)/$(TARGET) $^ $(LIB) $(CFLAGS) $(LDFLAGS)
 
 # Compile:

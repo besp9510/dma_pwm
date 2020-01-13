@@ -67,6 +67,7 @@ clean:
 
 # Link:
 $(TARGET).$(CUR).$(REV).$(AGE): $(OBJECTS)
+	@mkdir -p $(TARGETDIR)
 	$(CC) -o $(TARGETDIR)/$(TARGET).$(CUR).$(REV).$(AGE) $^ $(LIB) $(CFLAGS) $(LDFLAGS)
 
 # Compile:
