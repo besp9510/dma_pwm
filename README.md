@@ -254,7 +254,16 @@ float get_pulse_width()
 `get_pulse_width()` always returns the pulse width in microseconds. 
 
 ## Contributing
+Follow the "fork-and-pull" Git workflow.
+1. Fork the repo on GitHub
+2. Clone the project to your own machine
+3. Commit changes to your own branch
+4. Push your work back up to your fork
+5. Submit a Pull request so that your changes can be reviewed
 
+Be sure to merge the latest from "upstream" before making a pull request!
+
+Feel free to email at the email address under my account name if you have any questions.
 ## Authors
 
 Benjamin Spencer
