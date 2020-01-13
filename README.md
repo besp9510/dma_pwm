@@ -23,7 +23,7 @@ These instructions will get you a copy of the project up and running on your loc
 First, clone this repository.
 
 ```
-$ git clone
+$ git clone https://github.com/besp9510/dma_pwm.git
 ```
 
 Alternatively, download the repository from Git.
