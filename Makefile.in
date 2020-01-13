@@ -1,0 +1,115 @@
+# Compiler:
+CC := gcc
+
+# Versioning:
+CUR := 0
+REV := 0
+AGE := 0
+
+# Target shared library soname:
+TARGET := libdmapwm.so
+
+# Header file
+HEADER := dma_pwm.h
+
+# Root directories:
+ROOT := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
+# Directories:
+SRCDIR     := $(ROOT)/src
+INCDIR     := $(ROOT)/include
+BUILDDIR   := $(ROOT)/obj
+TARGETDIR  := $(ROOT)/bin
+LIBDESTDIR := $(PREFIX)/lib
+INCDESTDIR := $(PREFIX)/include
+
+# Extensions:
+SRCEXT := c
+DEPEXT := d
+OBJEXT := o
+
+# Flags, Libraries and Includes:
+CFLAGS   := -fPIC -Wall -Wextra -O2 $(DEBUG_SYM) # C flags
+LDFLAGS  := -shared
+
+LIB     :=
+INC     := -I$(INCDIR)
+INCDEP  := -I$(INCDIR)
+
+MACRO := $(DEBUG_LOG)
+
+# Find source and object files:
+SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,\
+	$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+
+# -------------------------------------------------------------------------- #
+# Rules (DO NOT EDIT)
+# -------------------------------------------------------------------------- #
+
+# Default make:
+all: $(TARGET).$(CUR).$(REV).$(AGE)
+
+# Remake:
+remake: clean all
+
+# Make the directories
+directories:
+	@mkdir -p $(TARGETDIR)
+	@mkdir -p $(BUILDDIR)
+
+# Clean target and object files:
+clean:
+	@rm -rf $(BUILDDIR)/* $(TARGETDIR)/*
+
+# Pull in dependency info for *existing* .o files:
+-include $(OBJECTS:.$(OBJEXT)=.$(DEPEXT))
+
+# Link:
+$(TARGET).$(CUR).$(REV).$(AGE): $(OBJECTS)
+	$(CC) -o $(TARGETDIR)/$(TARGET).$(CUR).$(REV).$(AGE) $^ $(LIB) $(CFLAGS) $(LDFLAGS)
+
+# Compile:
+$(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INC) -Wall $(MACRO) -c -o $@ $<
+	@$(CC) $(CFLAGS) $(INCDEP) -MM $(SRCDIR)/$*.$(SRCEXT) > \
+		$(BUILDDIR)/$*.$(DEPEXT)
+	@cp -f $(BUILDDIR)/$*.$(DEPEXT) $(BUILDDIR)/$*.$(DEPEXT).tmp
+	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' \
+		< $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
+	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp \
+		| fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
+	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
+
+# Install libary and header file:
+install:
+	@echo "Installing library to $(LIBDESTDIR)"
+	@echo "cp $(TARGETDIR)/$(TARGET).$(CUR).$(REV).$(AGE) $(LIBDESTDIR)/$(TARGET).$(CUR).$(REV).$(AGE)"
+	@cp $(TARGETDIR)/$(TARGET).$(CUR).$(REV).$(AGE) $(LIBDESTDIR)/$(TARGET).$(CUR).$(REV).$(AGE)
+	
+	@echo "Creating symbolic link $(TARGET)"
+	@echo "ln -sf $(LIBDESTDIR)/$(TARGET).$(CUR).$(REV).$(AGE) $(LIBDESTDIR)/$(TARGET)"
+	@ln -sf $(LIBDESTDIR)/$(TARGET).$(CUR).$(REV).$(AGE) $(LIBDESTDIR)/$(TARGET)
+	
+	@echo "Configuring dynamic linker run-time bindings"
+	@echo "ldconfig -v -n $(LIBDESTDIR)/"
+	@ldconfig -v -n $(LIBDESTDIR)/
+
+	@echo "Copying header file to $(INCDESTDIR)"
+	@echo "cp $(INCDIR)/$(HEADER) $(INCDESTDIR)/$(HEADER)"
+	@cp $(INCDIR)/$(HEADER) $(INCDESTDIR)/$(HEADER)
+
+# Uninstall libary and header file:
+uninstall:
+	@echo "Removing installed library at $(LIBDESTDIR)"
+	@echo "Removing installed header files at $(INCDESTDIR)"
+	@echo "rm -rf $(LIBDESTDIR)/$(TARGET).$(CUR).$(REV).$(AGE) $(LIBDESTDIR)/$(TARGET) $(INCDESTDIR)/$(HEADER)"
+	@rm -rf $(LIBDESTDIR)/$(TARGET).$(CUR).$(REV).$(AGE) $(LIBDESTDIR)/$(TARGET) $(INCDESTDIR)/$(HEADER)
+	
+	@echo "Configuring dynamic linker run-time bindings"
+	@echo "ldconfig -n $(LIBDESTDIR)"
+	@ldconfig -n $(LIBDESTDIR)
+
+# Non-file targets:
+.PHONY: all remake clean install uninstall

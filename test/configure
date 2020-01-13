@@ -1,0 +1,74 @@
+#!/bin/sh
+
+# Defaults:
+libdir=/usr/local/lib/
+debugsym=false
+debuglog=false
+
+# Loop through each input:
+for arg in "$@"; do
+    # Switch based on input:
+    case "$arg" in
+    # Prefix directory for install:
+    --lib-dir=*)
+        libdir=`echo $arg | sed 's/--lib-dir=//'`
+        ;;
+
+    # Debug symbols
+    --enable-debug-sym)
+        debugsym=true;;
+
+    # Debug logs:
+    --enable-debug-logs)
+        debuglog=true;;
+
+    # Help options
+    --help)
+        echo 'Usage: ./configure [options]'
+        echo 'Options:'
+        echo '  --lib-dir=<path>: Library installation directory'
+        echo '  --enable-debug-sym: Include compilation debug symbols'
+        echo '  --enable-debug-logs: Include program execution debug logs'
+        echo 'All invalid options are silently ignored'
+        exit 0
+        ;;
+    esac
+done
+
+echo 'Creating directories'
+mkdir -p bin/
+mkdir -p obj/
+mkdir -p src/dma_pwm/
+mkdir -p include/
+
+echo 'Copying source and header files'
+cp ../src/* src/dma_pwm/
+cp ../include/* include/
+
+echo 'Generating Makefile'
+
+# Append:
+echo '# Configuration:' > Makefile
+echo "LIBDIR := -L$libdir" >> Makefile
+echo "LIBDIR := -L$libdir"
+
+# Append if set:
+if $debugsym; then
+    # Append:
+    echo 'DEBUG_SYM := -g' >> Makefile
+    echo 'DEBUG_SYM := -g'
+fi
+
+# Append if set:
+if $debuglog; then
+    # Append:
+    echo 'DEBUG_LOG := -D DEBUG' >> Makefile
+    echo 'DEBUG_LOG := -D DEBUG'
+fi
+
+# Append Makefile
+echo ' ' >> Makefile
+cat Makefile.in >> Makefile
+
+echo 'Configuration complete'
+echo 'Ready to use Makefile'

@@ -1,0 +1,78 @@
+# Compiler:
+CC := gcc
+
+# Target binary:
+TARGET := dma_pwm_test
+
+# Root directories:
+ROOT := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
+# Directories:
+SRCDIR     := $(ROOT)/src
+INCDIR     := $(ROOT)/include
+BUILDDIR   := $(ROOT)/obj
+TARGETDIR  := $(ROOT)/bin
+
+# Extensions:
+SRCEXT := c
+DEPEXT := d
+OBJEXT := o
+
+# Flags, Libraries and Includes:
+CFLAGS   := -Wall -O2 -g # C flags
+LDFLAGS  :=
+
+LIB     :=
+INC     := -I$(INCDIR)
+INCDEP  := -I$(INCDIR)
+
+MACRO := $(DEBUG_LOG)
+
+# Find source and object files:
+SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,\
+	$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+
+# -------------------------------------------------------------------------- #
+# Rules (DO NOT EDIT)
+# -------------------------------------------------------------------------- #
+
+# Default make:
+source: $(TARGET)
+
+# Make the directories
+directories:
+	@mkdir -p $(TARGETDIR)
+	@mkdir -p $(BUILDDIR)
+	@cp $(ROOT)/../src/* $(SRCDIR)/
+
+# Clean target and object files:
+clean:
+	@$(RM) -rf $(BUILDDIR)/* $(TARGETDIR)/*
+
+# Pull in dependency info for *existing* .o files:
+-include $(OBJECTS:.$(OBJEXT)=.$(DEPEXT))
+
+# Link:
+$(TARGET): $(OBJECTS)
+	$(CC) -o $(TARGETDIR)/$(TARGET) $^ $(LIB) $(CFLAGS) $(LDFLAGS)
+
+# Compile:
+$(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INC) -Wall $(MACRO) -c -o $@ $<
+	@$(CC) $(CFLAGS) $(INCDEP) -MM $(SRCDIR)/$*.$(SRCEXT) > \
+		$(BUILDDIR)/$*.$(DEPEXT)
+	@cp -f $(BUILDDIR)/$*.$(DEPEXT) $(BUILDDIR)/$*.$(DEPEXT).tmp
+	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' \
+		< $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
+	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp \
+		| fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
+	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
+
+# Default make:
+library:
+	gcc -Wall $(DEBUG_SYM) $(LIBDIR) -o $(TARGETDIR)/$(TARGET) $(SRCDIR)/$(TARGET).$(SRCEXT) -ldmapwm
+
+# Non-file targets:
+.PHONY: all remake clean library
