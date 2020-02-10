@@ -3,7 +3,7 @@
 #define DEFAULT_PAGES       16  // Number of pages for each control
                                 // block sequence
 
-#define MOTOR_PULSE_WIDTH 0.1   // Motor PWM pulse width in us
+#define MOTOR_PULSE_WIDTH 0.5   // Motor PWM pulse width in us
 #define SERVO_PULSE_WIDTH 100   // Servo PWM pulse width in us
 #define LED_PULSE_WIDTH   10000 // LED PWM pulse width in us
 

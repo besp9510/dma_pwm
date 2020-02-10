@@ -86,11 +86,6 @@
 // Constants
 #define NUM_DMA_CHANNELS 10 // Number of DMA channels
 
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// TODO
-// static all global variables
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 // Structure definitions
 
 // DMA controller register map:
@@ -331,7 +326,7 @@ float config_pwm(int pages, float pulse_width) {
                 printf("ERROR: channel %d has been requested\n", i);
                 printf("ERROR: config_pwm() returned with %d\n", -ECHNLREQ);
             }
-            
+
             // Exit with error:
             return -ECHNLREQ;
         }
@@ -344,7 +339,7 @@ float config_pwm(int pages, float pulse_width) {
     allocated_pages = pages;
 
     // Check is desired pulse width is out of bounds:
-    if ((pulse_width > 35175782146) || (pulse_width < 0.002)) {
+    if ((pulse_width > 35175782146) || (pulse_width < 0.04)) {
         // Debug logs:
         if (DEBUG) {
             // Logs:
@@ -356,7 +351,8 @@ float config_pwm(int pages, float pulse_width) {
     }
 
     // Calculate new clock divisor if range remained constant:
-    clock_div_temp = ((pulse_width / 1e6) / pwm_rng) * DEFAULT_CLOCK_FREQ;
+    clock_div_temp = ((pulse_width / 1000000.0) / pwm_rng) * \
+        DEFAULT_CLOCK_FREQ;
 
     // Check if it's out of bounds:
     if ((clock_div_temp < 1) || (clock_div_temp > 4095)) {
@@ -364,8 +360,8 @@ float config_pwm(int pages, float pulse_width) {
         clock_div_temp = (clock_div_temp < 1) ? 1 : 4095;
 
         // Calculate pwm range:
-        pwm_rng_temp = \
-            (pulse_width / 1e6) * (DEFAULT_CLOCK_FREQ / clock_div_temp);
+        pwm_rng_temp = (pulse_width / 1000000.0) * \
+            ((float)DEFAULT_CLOCK_FREQ / clock_div_temp);
 
         // Check pwm range is within bounds (redundant check):
         if (pwm_rng_temp < 1) {
@@ -386,7 +382,7 @@ float config_pwm(int pages, float pulse_width) {
 
     // Calculate achieved pulse width:
     pulse_width_us_temp = \
-        (pwm_rng_temp / (DEFAULT_CLOCK_FREQ / clock_div_temp));
+        (pwm_rng_temp / (DEFAULT_CLOCK_FREQ / clock_div_temp)) * 1e6;
 
     // Update:
     clock_div = clock_div_temp;
@@ -397,6 +393,7 @@ float config_pwm(int pages, float pulse_width) {
     if (DEBUG) {
         // Logs:
         printf("Setting pulse width to %0.3f us\n", pulse_width_us);
+        printf("Setting number of allocated pages to %d\n", allocated_pages);
         printf("Configured dma_pwm.c\n");
     }
 

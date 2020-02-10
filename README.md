@@ -130,7 +130,7 @@ Pulse width in microseconds of the PWM signal `float pulse_width` is the length 
 3. `MOTOR_PULSE_WIDTH` : 5 kHz - 1 Mhz
 4. `LED_PULSE_WIDTH` : 0.05 Hz - 10 Hz
 
-Note that these ranges are suggestions but feel free to calculate a pulse width that will be suite your application.
+Note that these ranges are suggestions but feel free to calculate a pulse width that will be suite your application. Note that acceptable pulse widths lie above 0.5 us. Strange behavior was seen for any pulse width lower than this value.
 
 ##### Return Value
 `config_pwm()` return 0 upon success. On error, an error number is returned.
