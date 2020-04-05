@@ -1,4 +1,4 @@
-# Direct Memory Access PWM for the Raspberry PI
+# Direct Memory Access (DMA) PWM for the Raspberry PI
 
 dma_pwm.c provides flexible hardware pulse width modulation (PWM) for the Raspberry PI via the direct memory access (DMA) controller. Providing PWM via DMA frees the CPU thus allowing low processor usages to programs driving DC motors, servos, LEDs, etc. using the general purpose input/output (GPIO) pins. Unlike the PI's built-in PWM controller, any number of GPIO pins can be driven over a total of 10 individual channels. This software requires no dependencies other than Raspbian running on any version of the Raspberry PI.
 
