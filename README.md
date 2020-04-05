@@ -85,6 +85,8 @@ Next, compile the test script one of two ways: link shared library or compile wi
 $ make library
 ```
 
+or
+
 ```
 $ make source
 ```
