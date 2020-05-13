@@ -12,6 +12,8 @@ dma_pwm.c is provided two ways for flexibility:
 1. C source and header files that can be compiled along with your program
 2. C shared library
 
+To better understand the source code and theory behind DMA PWM on the PI, see [raspberry_pi_dma_pwm.pdf](doc/raspberry_pi_dma_pwm.pdf) for a complete breakdown on how and why this works.
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
