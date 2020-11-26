@@ -1,18 +1,18 @@
-# Direct Memory Access (DMA) PWM for the Raspberry PI
+# Direct Memory Access (DMA) PWM for the Raspberry Pi
 
-dma_pwm.c provides flexible hardware pulse width modulation (PWM) for the Raspberry PI via the direct memory access (DMA) controller. Providing PWM via DMA frees the CPU thus allowing low processor usages to programs driving DC motors, servos, LEDs, etc. using the general purpose input/output (GPIO) pins. Unlike the PI's built-in PWM controller, any number of GPIO pins can be driven over a total of 10 individual channels. This software requires no dependencies other than Raspbian running on any version of the Raspberry PI.
+dma_pwm.c provides flexible hardware pulse width modulation (PWM) for the Raspberry Pi via the direct memory access (DMA) controller. Providing PWM via DMA frees the CPU thus allowing low processor usages to programs driving DC motors, servos, LEDs, etc. using the general purpose input/output (GPIO) pins. Unlike the Pi's built-in PWM controller, any number of GPIO pins can be driven over a total of 10 individual channels. This software requires no dependencies other than Raspbian running on any version of the Raspberry Pi.
 
 ![o_scope](images/o_scope.png)
 
 *1 Khz PWM signal at 50% duty cycle on an oscilloscope produced by dma_pwm.c*
 
-Other examples of DMA PWM, and ones that this project is based on, are Chris Hager's [RPIO](https://github.com/metachris/RPIO) and Richard Hirst's [ServoBlaster](https://github.com/richardghirst/PiBits/tree/master/ServoBlaster). Unfortunately, these projects are no longer actively maintained so dma_pwm.c serves to bridge the gap and continue to provide an up-to-date and easy-to-use library of functions to achieve flexible hardware PWM on the PI. This project also emphasizes documenting how PWM via DMA is achieved to allow anyone a better understanding of the Raspberry PI and low-level programming in general.
+Other examples of DMA PWM, and ones that this project is based on, are Chris Hager's [RPIO](https://github.com/metachris/RPIO) and Richard Hirst's [ServoBlaster](https://github.com/richardghirst/PiBits/tree/master/ServoBlaster). Unfortunately, these projects are no longer actively maintained so dma_pwm.c serves to bridge the gap and continue to provide an up-to-date and easy-to-use library of functions to achieve flexible hardware PWM on the Pi. This project also emphasizes documenting how PWM via DMA is achieved to allow anyone a better understanding of the Raspberry Pi and low-level programming in general.
 
 dma_pwm.c is provided two ways for flexibility:
 1. C source and header files that can be compiled along with your program
 2. C shared library
 
-To better understand the source code and theory behind DMA PWM on the PI, see [raspberry_pi_dma_pwm.pdf](doc/raspberry_pi_dma_pwm.pdf) for a complete breakdown on how and why this works.
+To better understand the source code and theory behind DMA PWM on the Pi, see [raspberry_pi_dma_pwm.pdf](doc/raspberry_pi_dma_pwm.pdf) for a complete breakdown on how and why this works.
 
 ## Getting Started
 
@@ -20,7 +20,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installing
 
-### Obtain the Project
+#### Obtain the Project
 
 First, clone this repository.
 
@@ -63,7 +63,7 @@ $ sudo make uninstall
 
 ## Running the Test
 
-dma_pwm_test.c is a test script to check and see PWM via DMA works on your Raspberry PI and provide examples on how to use dma_pwm.c. The outline of this test script:
+dma_pwm_test.c is a test script to check and see PWM via DMA works on your Raspberry Pi and provide examples on how to use dma_pwm.c. The outline of this test script:
 1. Configuring dma_pwm.c
 2. Requesting a PWM channel
 3. Setting a PWM signal
@@ -104,14 +104,14 @@ Both will create an executable called `dma_pwm_test` under `bin/`. While running
 ### How it Works
 To better understand the source code and theory behind DMA PWM on the PI, see [raspberry_pi_dma_pwm.pdf](doc/raspberry_pi_dma_pwm.pdf) for a complete breakdown on how and why this works. This reference documents
 1. What DMA is and what DMA controllers are
-2. Using the DMA controller on the PI
+2. Using the DMA controller on the Pi
 3. PWM and the DMA controller
 4. DMA controller to create PWM
 5. Implementation in C
 
-Note that this reference has register addresses specific to the BCM2836/BCM2837 (Raspberry PI 2 & 3) processor. The peripheral base physical address for the other PI versions are:
-* Raspberry PI 1 & Zero (BCM2835) : 0x20000000
-* Raspberry PI 4 (BCM2711) : 0xFE000000
+Note that this reference has register addresses specific to the BCM2836/BCM2837 (Raspberry Pi 2 & 3) processor. The peripheral base physical address for the other PI versions are:
+* Raspberry Pi 1 & Zero (BCM2835) : 0x20000000
+* Raspberry Pi 4 (BCM2711) : 0xFE000000
 
 Additionally, an Excel spreadsheet ["dma_pwm_pulse_width_calculator.xlsx"](doc/dma_pwm_pulse_width_calculator.xlsx) is provided to allow easy calculation of custom pulse widths (more discussion below on this).
 
@@ -120,7 +120,7 @@ Additionally, an Excel spreadsheet ["dma_pwm_pulse_width_calculator.xlsx"](doc/d
 You must run dma_pwm.c as root or with root privileges.
 
 #### Configure PWM
-Configure amount of memory pages allocated, pulse width in microseconds of the PWM signal, and PI version away from defaults. This function call is not required to request a channel and enable PWM, but is required prior to requesting a channel for any configuration change to take effect. This function call will then fail if any channel has been requested. Note that these configurations effect all channels (e.g, and and all PWM signals regardless of channel will have the same pulse width).
+Configure amount of memory pages allocated, pulse width in microseconds of the PWM signal, and Pi version away from defaults. This function call is not required to request a channel and enable PWM, but is required prior to requesting a channel for any configuration change to take effect. This function call will then fail if any channel has been requested. Note that these configurations effect all channels (e.g, and and all PWM signals regardless of channel will have the same pulse width).
 
 ```c
 float config_pwm(int pages, float pulse_width);
@@ -155,7 +155,7 @@ int request_pwm();
 
 Error numbers:
 * `ENOFREECHNL` : No free DMA channels available to be requested.
-* `ENOPIVER` : Could not get PI board revision.
+* `ENOPIVER` : Could not get Pi board revision.
 * `EMAPFAIL` : Peripheral memory mapping failed.
 * `ESIGHDNFAIL` : Signal handler failed to setup.
 
@@ -214,7 +214,7 @@ Error numbers:
 * `EINVCHNL` : Invalid or non-requested channel; channel must be requested from `request_pwm()`.
 
 #### Free PWM Channel
-Free a requested channel by freeing allocated memory and clearing GPIO pins. This function call should **always** be used prior to program exit as the allocated memory associated with the channel will not automatically be freed after program exit. This is because non-cached memory is allocated via the VideoCore interface. If memory is not freed after use, expect dma_pwm.c to break; resolve this issue by power cycling the PI. Note that in the case of unexpected program termination, dma_pwm.c has signal handlers that will call `free_pwm()` for cases of `SIGHUP`, `SIGQUIT`, `SIGINT`, and `SIGTERM` signals to ensure allocated memory is freed.
+Free a requested channel by freeing allocated memory and clearing GPIO pins. This function call should **always** be used prior to program exit as the allocated memory associated with the channel will not automatically be freed after program exit. This is because non-cached memory is allocated via the VideoCore interface. If memory is not freed after use, expect dma_pwm.c to break; resolve this issue by power cycling the Pi. Note that in the case of unexpected program termination, dma_pwm.c has signal handlers that will call `free_pwm()` for cases of `SIGHUP`, `SIGQUIT`, `SIGINT`, and `SIGTERM` signals to ensure allocated memory is freed.
 
 ```c
 int free_pwm(int channel);
