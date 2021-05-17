@@ -54,6 +54,8 @@ Then install files to the installation directory. You must run the following eit
 $ sudo make install
 ```
 
+To use dma_pwm.c in your project, simply include the header file `dma_pwm.h` and link to the shared library `-ldmapwm`.
+
 #### Uninstall
 At anytime, to uninstall dma_pwm.c, use the same Makefile used for compiling or a Makefile generated using the configuration script with the same options as root or with root privileges.
 
