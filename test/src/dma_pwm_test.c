@@ -74,7 +74,7 @@ int main() {
 
     // Update properties:
     freq = 5;
-    duty = 5;
+    duty = 50;
 
     // Update channel:
     if (set_pwm(channel, gpio, (sizeof(gpio) / sizeof(int)), freq, duty) != 0) {

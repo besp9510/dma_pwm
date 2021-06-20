@@ -910,7 +910,7 @@ int set_pwm(int channel, int* gpio, size_t num_gpio, \
     t_sub_us = 1e6 * (1.0 / freq);
 
     // Determine number of CBs required:
-    cb_seq_num = (t_sub_us / pulse_width_us);
+    cb_seq_num = (t_sub_us / pulse_width_us) / 2;
 
     // Determine the number of required pages for the CB seq:
     pages_req = CEILING((cb_seq_num / getpagesize()));
@@ -936,7 +936,7 @@ int set_pwm(int channel, int* gpio, size_t num_gpio, \
     }
 
     // Determine achieved frequency:
-    freq_act = 1.0 / (cb_seq_num * pulse_width_us * 1e-6);
+    freq_act = (1.0 / (cb_seq_num * pulse_width_us * 1e-6)) / 2;
 
     // Determine PWM resolution:
     pwm_d_res = 100.0 * (1 - (cb_seq_num - 1) / (float)cb_seq_num);
@@ -953,7 +953,7 @@ int set_pwm(int channel, int* gpio, size_t num_gpio, \
     }
 
     // Determine number of set and clear CBs:
-    cb_set_num = (t_sub_us / pulse_width_us) * (pwm_d_act / 100);
+    cb_set_num = (t_sub_us / pulse_width_us) * (pwm_d_act / 100) / 2;
     cb_clr_num = abs(cb_seq_num - cb_set_num);
 
     // Add additional number of CBs for GPIO set and clear:

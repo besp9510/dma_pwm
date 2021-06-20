@@ -1,0 +1,10 @@
+# Ignore any built Makefiles
+Makefile
+
+# Ignore build files:
+*.d
+*.o
+**/bin/
+
+# Vscode
+**/.vscode/
