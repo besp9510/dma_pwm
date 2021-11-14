@@ -1,3 +1,34 @@
+// DMA PWM: Direct Memory Access (DMA) PWM for the Raspberry Pi
+//     ___     ___     __                  __                ___     ___
+//    |   |   |   |   |  \  |\/|  /\      |__) |  |  |\/|   |   |   |   |
+//    |   |   |   |   |__/  |  | /~~\ ___ |    |/\|  |  |   |   |   |   |
+//  __|   |___|   |_________________________________________|   |___|   |__
+//
+// Copyright (c) 2020 Benjamin Spencer
+// ============================================================================
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+// ============================================================================
+//
+// Acknowledgements:
+//  - Chris Hager's RPIO
+//  - Richard Hirst's ServoBlaster
+
 // Include C standard libraries:
 #include <stdio.h>  // C Standard I/O libary
 #include <stdlib.h> // C Standard library
@@ -7,7 +38,7 @@
 #include <stdint.h> // C Standard integer types
 #include <stddef.h> // C Standard type and macro definitions
 #include <signal.h> // C Standard signal processing
-#include <errno.h>   // C Standard for error conditions
+#include <errno.h>  // C Standard for error conditions
 
 // Include C POSIX libraries:
 #include <sys/mman.h> // Memory management library
@@ -84,7 +115,7 @@
 #define DEFAULT_PWM_RNG 100 // Period of length
 
 // Constants
-#define NUM_DMA_CHANNELS 10 // Number of DMA channels
+#define NUM_DMA_CHANNELS 7 // Number of DMA channels
 
 // Structure definitions
 
@@ -192,11 +223,15 @@ static int allocated_pages = DEFAULT_PAGES; // Allocated uncached memory
 
 static float pulse_width_us; // PWM signal pulse width
 
+// Tested on Raspberry Pi 3b+ running Linux raspberrypi 5.10.17-v7+ #1403
+// No interruptions observed over 40 minute continuous output
+// Do not use channels: 0, 1, 2, 3, 5, 6, 7
+// Use channels: 8, 9, 10, 11, 12, 13, 14
 static int valid_dma_channels[NUM_DMA_CHANNELS] = \
-    {4, 5, 8, 9, 10, 11, 12, 13, 14, 15}; // DMA channels to use
+    {10, 8, 9, 11, 12, 13, 14}; // DMA channels to use
 
 static int dma_channels_status[NUM_DMA_CHANNELS] = \
-    {1, 1, 1, 1, 1, 1, 1 ,1, 1, 1}; // 1 = Availabe/free
+    {1, 1, 1, 1, 1, 1, 1}; // 1 = Availabe/free
 
 static struct channel dma_channels[NUM_DMA_CHANNELS]; // Channel structure for
                                                       // each DMA channel
@@ -1342,7 +1377,21 @@ float get_freq_pwm(int channel) {
 }
 
 // Get PWM pulse width:
-float get_pulse_width() {
+float get_pulse_width(void) {
     // Return pulse width:
     return pulse_width_us;
+}
+
+// Get register status for debugging:
+struct reg_pwm get_reg_pwm(int channel) {
+    struct reg_pwm reg = {
+        .pwm_ctl_ctl = pwm_ctl_reg->ctl,
+        .pwm_ctl_sta = pwm_ctl_reg->sta,
+        .pwm_ctl_dmac = pwm_ctl_reg->dmac,
+        .pwm_clk_pwmctl = pwm_clk_reg->pwmctl,
+        .pwm_clk_pwmdiv = pwm_clk_reg->pwmdiv,
+        .dma_cs = dma_channels[channel].dma_reg->cs,
+        .dma_debug = dma_channels[channel].dma_reg->debug
+    };
+    return reg;
 }

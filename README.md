@@ -63,6 +63,23 @@ At anytime, to uninstall dma_pwm.c, use the same Makefile used for compiling or 
 $ sudo make uninstall
 ```
 
+### limitations
+
+Since this library and the onboard Raspberry Pi audio both use the PWM, they cannot be used together. You will need to blacklist the Broadcom audio kernel module by creating a file `/etc/modprobe.d/snd-blacklist.conf` with
+
+```
+blacklist snd_bcm2835
+```
+
+If the audio device is still loading after blacklisting, you may also need to comment it out in the /etc/modules file.
+
+On headless systems you may also need to force audio through hdmi Edit config.txt and add:
+
+```
+hdmi_force_hotplug=1
+hdmi_force_edid_audio=1
+```
+
 ## Running the Test
 
 dma_pwm_test.c is a test script to check and see PWM via DMA works on your Raspberry Pi and provide examples on how to use dma_pwm.c. The outline of this test script:
