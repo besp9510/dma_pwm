@@ -63,6 +63,10 @@ At anytime, to uninstall dma_pwm.c, use the same Makefile used for compiling or 
 $ sudo make uninstall
 ```
 
+A reboot is required for this change to take effect
+
+Some distributions use audio by default, even if nothing is being played. If audio is needed, you can use a USB audio device instead.
+
 ### limitations
 
 Since this library and the onboard Raspberry Pi audio both use the PWM, they cannot be used together. You will need to blacklist the Broadcom audio kernel module by creating a file `/etc/modprobe.d/snd-blacklist.conf` with
@@ -79,6 +83,10 @@ On headless systems you may also need to force audio through hdmi Edit config.tx
 hdmi_force_hotplug=1
 hdmi_force_edid_audio=1
 ```
+
+A reboot is required for this change to take effect.
+
+Some distributions use audio by default, even if nothing is being played. If audio is needed, you can use a USB audio device instead.
 
 ## Running the Test
 
