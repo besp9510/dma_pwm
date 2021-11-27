@@ -374,7 +374,7 @@ float config_pwm(int pages, float pulse_width) {
     allocated_pages = pages;
 
     // Check is desired pulse width is out of bounds:
-    if ((pulse_width > 35175782146) || (pulse_width < 0.04)) {
+    if ((pulse_width > 35175782146) || (pulse_width < 0.4)) {
         // Debug logs:
         if (DEBUG) {
             // Logs:
