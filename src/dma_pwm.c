@@ -927,8 +927,9 @@ int set_pwm(int channel, int* gpio, size_t num_gpio, \
     }
 
     // Abort if input GPIOs do not make sense:
+    // Added support to manipulate internal GPIOs (pins 32 and above)
     for (i = 0; i < num_gpio; i++) {
-        if ((gpio[i] < 0) || (gpio[i] > 31)) {
+        if ((gpio[i] < 0) || (gpio[i] > 53)) {
             // Debug logs:
             if (DEBUG) {
                 // Log message:
