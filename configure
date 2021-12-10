@@ -83,8 +83,8 @@ fi
 # Append if set:
 if $debuglog; then
     # Append:
-    echo 'DEBUG_LOG := -D DEBUG' >> Makefile
-    echo 'DEBUG_LOG := -D DEBUG'
+    echo 'DEBUG_LOG := -DDEBUG' >> Makefile
+    echo 'DEBUG_LOG := -DDEBUG'
 fi
 
 # Append Makefile
