@@ -66,16 +66,6 @@ for arg in "$@"; do
     esac
 done
 
-echo 'Creating directories'
-mkdir -p bin/
-mkdir -p obj/
-mkdir -p src/dma_pwm/
-mkdir -p include/
-
-echo 'Copying source and header files'
-cp ../src/* src/dma_pwm/
-cp ../include/* include/
-
 echo 'Generating Makefile'
 
 # Append:

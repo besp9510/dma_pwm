@@ -2,9 +2,7 @@
 
 dma_pwm.c provides flexible hardware pulse width modulation (PWM) for the Raspberry Pi via the direct memory access (DMA) controller. Providing PWM via DMA frees the CPU thus allowing low processor usages to programs driving DC motors, servos, LEDs, etc. using the general purpose input/output (GPIO) pins. Unlike the Pi's built-in PWM controller, any number of GPIO pins can be driven over a total of 10 individual channels. This software requires no dependencies other than Raspbian running on any version of the Raspberry Pi.
 
-![o_scope](images/o_scope.png)
-
-*1 Khz PWM signal at 50% duty cycle on an oscilloscope produced by dma_pwm.c*
+![o_scope](images/scope_screen_measure.gif)
 
 Other examples of DMA PWM, and ones that this project is based on, are Chris Hager's [RPIO](https://github.com/metachris/RPIO) and Richard Hirst's [ServoBlaster](https://github.com/richardghirst/PiBits/tree/master/ServoBlaster). Unfortunately, these projects are no longer actively maintained so dma_pwm.c serves to bridge the gap and continue to provide an up-to-date and easy-to-use library of functions to achieve flexible hardware PWM on the Pi. This project also emphasizes documenting how PWM via DMA is achieved to allow anyone a better understanding of the Raspberry Pi and low-level programming in general.
 
@@ -108,19 +106,13 @@ $ ./configure
 
 By default, the dma_pwm.c shared library will be looked for under the standard directories (e.g. `/usr/local/`). If this is not the case, pass the option ``--help`` to learn how to specify a directory to be searched. Additionally, ``--help`` will also display available configuration options such as debug symbols and debug logs.
 
-Next, compile the test script one of two ways: link shared library or compile with source.
+Next, compile the test script
 
 ```
-$ make library
+$ make
 ```
 
-or
-
-```
-$ make source
-```
-
-Both will create an executable called `dma_pwm_test` under `bin/`. While running the test script, either monitor the output of the selected GPIO pin using a LED, oscilloscope, ect.
+This will create an executable called `dma_pwm_test` under `bin/`. While running the test script, either monitor the output of the selected GPIO pin using a LED, oscilloscope, ect.
 
 ![dma_pwm_test](images/dma_pwm_test.gif)
 

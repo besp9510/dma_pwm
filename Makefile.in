@@ -53,6 +53,7 @@ BUILDDIR   := $(ROOT)/obj
 TARGETDIR  := $(ROOT)/bin
 LIBDESTDIR := $(PREFIX)/lib
 INCDESTDIR := $(PREFIX)/include
+SRCSUBDIR  := $(shell find $(SRCDIR) -type d)
 
 # Extensions:
 SRCEXT := c
@@ -64,8 +65,8 @@ CFLAGS   := -fPIC -Wall -Wextra -O2 $(DEBUG_SYM) # C flags
 LDFLAGS  := -shared
 
 LIB     :=
-INC     := -I$(INCDIR)
-INCDEP  := -I$(INCDIR)
+INC     := -I$(INCDIR) $(addprefix -I,$(SRCSUBDIR))
+INCDEP  := -I$(INCDIR) $(addprefix -I,$(SRCSUBDIR))
 
 MACRO := $(DEBUG_LOG)
 

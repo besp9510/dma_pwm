@@ -43,6 +43,7 @@ SRCDIR     := $(ROOT)/src
 INCDIR     := $(ROOT)/include
 BUILDDIR   := $(ROOT)/obj
 TARGETDIR  := $(ROOT)/bin
+SRCSUBDIR  := $(shell find $(SRCDIR) -type d)
 
 # Extensions:
 SRCEXT := c
@@ -53,9 +54,9 @@ OBJEXT := o
 CFLAGS   := -Wall -O2 -g # C flags
 LDFLAGS  :=
 
-LIB     :=
-INC     := -I$(INCDIR)
-INCDEP  := -I$(INCDIR)
+LIB     := -ldmapwm
+INC     := -I$(INCDIR) $(addprefix -I,$(SRCSUBDIR))
+INCDEP  := -I$(INCDIR) $(addprefix -I,$(SRCSUBDIR))
 
 MACRO := $(DEBUG_LOG)
 
@@ -70,11 +71,6 @@ OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,\
 
 # Default make:
 source: $(TARGET)
-
-# Make the directories
-directories:
-	@mkdir -p $(TARGETDIR)
-	@mkdir -p $(BUILDDIR)
 
 # Clean target and object files:
 clean:
@@ -100,10 +96,6 @@ $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp \
 		| fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
 	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
-
-# Default make:
-library:
-	gcc -Wall $(DEBUG_SYM) $(LIBDIR) -o $(TARGETDIR)/$(TARGET) $(SRCDIR)/$(TARGET).$(SRCEXT) -ldmapwm
 
 # Non-file targets:
 .PHONY: all remake clean library
