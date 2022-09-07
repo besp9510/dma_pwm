@@ -30,4 +30,4 @@
 //  - Richard Hirst's ServoBlaster
 
 // Map peripheral physical address to virtual address
-volatile uintptr_t* map_peripheral__(uintptr_t base_addr);
+volatile uint32_t* map_peripheral__(uint32_t base_addr);

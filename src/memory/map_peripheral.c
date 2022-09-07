@@ -40,7 +40,7 @@
 #include <unistd.h>   // Symbolic constants and types library
 
 // Map peripheral physical address to virtual address
-volatile uintptr_t* map_peripheral__(uintptr_t base_addr) {
+volatile uint32_t* map_peripheral__(uint32_t base_addr) {
     // Definitions:
     int fd;          // File descriptor
     void *virt_addr; // Pointer to virtual address
@@ -78,5 +78,5 @@ volatile uintptr_t* map_peripheral__(uintptr_t base_addr) {
     }
 
     // Return type casted pointer to unsigned int:
-    return (volatile uintptr_t*) virt_addr;
+    return (volatile uint32_t*) virt_addr;
 }

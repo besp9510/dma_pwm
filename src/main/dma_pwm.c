@@ -159,9 +159,9 @@ struct channel {
     struct uncached_mem *set_mask[2];   // GPIO set mask uncached memory struct
     struct uncached_mem *clear_mask[2]; // GPIO clear mask uncached memory struct
 
-    uintptr_t cb_base_bus_addr[2];    // Control block seq. phys base address
-    uintptr_t set_mask_bus_addr[2];   // GPIO set mask physical address
-    uintptr_t clear_mask_bus_addr[2]; // GPIO clear mask physical address
+    uint32_t cb_base_bus_addr[2];    // Control block seq. phys base address
+    uint32_t set_mask_bus_addr[2];   // GPIO set mask physical address
+    uint32_t clear_mask_bus_addr[2]; // GPIO clear mask physical address
 
     volatile struct dma_reg_map *dma_reg; // DMA register map for the channel
 
@@ -207,10 +207,10 @@ static int gpset0_bus_addr;  // GPIO set bus address
 static int gpclr0_bus_addr;  // GPIO clear bus address
 static int pwmfif1_bus_addr; // PWM FIF1 bus address
 
-static volatile uintptr_t *gpio_base_virt_addr;    // GPIO base virt. ad.
-static volatile uintptr_t *dma_ctl_base_virt_addr; // DMA contoller virt. ad.
-static volatile uintptr_t *pwm_ctl_base_virt_addr; // PWM Controller virt ad.
-static volatile uintptr_t *pwm_clk_base_virt_addr; // PWM Clock Manager virt.
+static volatile uint32_t *gpio_base_virt_addr;    // GPIO base virt. ad.
+static volatile uint32_t *dma_ctl_base_virt_addr; // DMA contoller virt. ad.
+static volatile uint32_t *pwm_ctl_base_virt_addr; // PWM Controller virt ad.
+static volatile uint32_t *pwm_clk_base_virt_addr; // PWM Clock Manager virt.
                                                    // address
 
 static int pi_version; // Raspberry PI board version

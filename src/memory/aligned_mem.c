@@ -51,7 +51,7 @@ void *aligned_malloc(size_t size, size_t alignment) {
     // Find pointer aligned within allocated memory to desired alignment:
     // (mask address plus alignment - 1 plus size of pointer with desired
     // alignment. This mask rounds up to neareast alignment)
-    void *ptr_aligned = (void**)((uintptr_t) \
+    void *ptr_aligned = (void**)((uint32_t) \
         (ptr_malloc + (alignment - 1) + sizeof(void*)) & ~(alignment - 1));
     
     // Store address returned by malloc immediately before aligned address
@@ -74,7 +74,7 @@ int aligned_free(void *ptr) {
 }
 
 // Virtual to physical memory address using pagemap:
-uintptr_t virt_to_phys_addr(uintptr_t virt_addr, pid_t pid) {
+uint32_t virt_to_phys_addr(uint32_t virt_addr, pid_t pid) {
     // Definitions:
     FILE *fd;
 
@@ -83,7 +83,7 @@ uintptr_t virt_to_phys_addr(uintptr_t virt_addr, pid_t pid) {
     int pt_offset; // Page table offset
     int pfn;       // Physical page frame
 
-    uintptr_t phys_addr;
+    uint32_t phys_addr;
 
     char filename[80]; // Pagemap file path
 

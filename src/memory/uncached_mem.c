@@ -108,9 +108,9 @@ int uncached_free__(struct uncached_mem *block) {
 }
 
 // Translate virtual to physical address of uncached memory
-uintptr_t uncached_virt_to_bus_addr__(struct uncached_mem *block, void *ptr) {
+uint32_t uncached_virt_to_bus_addr__(struct uncached_mem *block, void *ptr) {
     // Definitions:
-    uintptr_t offset;
+    uint32_t offset;
 
     // Find offset of address to its base:
     offset = (char*)ptr - (char*)block->virt_addr;
