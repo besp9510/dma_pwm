@@ -232,6 +232,12 @@ static struct pi_version_struct pi_version[] = {
     {
         .revision_string = "b03114",
         .version = 4
+    },
+
+    // Pi 4 Model B Rev 1.5
+    {
+        .revision_string = "c03115",
+        .version = 4
     }
 };
 
@@ -241,7 +247,7 @@ int get_pi_version__() {
     int version;          // Pi board version
     char *substring;      // Substring
 
-    char file_line[80]; // Line of text 
+    char file_line[80]; // Line of text
 
     int i;
 
